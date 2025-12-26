@@ -1,12 +1,12 @@
 .video {
-    border-radius: 50px;
+    border-radius: 20px;
     /* border: 2px solid black; */
     width: 320px;
     height: 240px;
-    
+    margin-top: 60px;
 }
 
-button {
+button, .custom-upload {
     image-rendering: pixelated;
     background-color: #63c5da;
     margin: 10px;
@@ -20,6 +20,76 @@ button {
     color: white;
 }
 
-button:hover {
+button:hover, .custom-upload:hover {
     color: #241571;
+}
+
+button:disabled {
+  opacity: 0.5;
+}
+
+button:disabled:hover {
+  color: white; /* prevent hover effect */
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 30px;
+}
+input[type="file"] {
+    display: none;
+}
+
+textarea{
+    border-radius: 5px;
+    padding: 5px;
+    font-family: monospace;
+    font-size: 15px;
+    width: 200px;
+    height: 100px;
+    resize: none;
+    border: none;
+}
+
+textarea:focus {
+  
+    outline-color: #63c5da;
+    outline-offset: 0.5ch;
+}
+
+
+p {
+    font-family: monospace;
+    font-size: 18px;
+    color: #45505e;
+}
+
+.rating_stars {
+    margin-bottom: 10px;
+    display: inline-block;
+    font-size: 20px;
+    font-weight: 200;
+    color: #45505e;
+    position: relative;
+}
+
+.rating_stars span .fa, .rating_stars span.active-low .fa-star-o, .rating_stars span.active-high .fa-star-o{
+	display: none;
+}
+
+.rating_stars span .fa-star-o{
+	display: inline-block;
+}
+
+.rating_stars span.s.active-high .fa-star{
+	display: inline-block;
+    color: #feb645;
+    border-color: black;
+}
+
+.rating_stars span.s.active-low .fa-star-half-o{
+	display: inline-block; color: #feb645;
 }

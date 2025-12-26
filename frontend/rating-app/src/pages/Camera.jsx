@@ -7,7 +7,19 @@ export default function Camera() {
 
   const [photo, setPhoto] = useState(null);
   const [stream, setStream] = useState(null);
+  const [selected, setSelect] = useState(false);
+  const [hover, setHover] = useState(0);
+  const [rating, setRating] = useState(0);
 
+  const value = hover || rating;
+
+  const stars = [
+    { low: 0.5, high: 1 },
+    { low: 1.5, high: 2 },
+    { low: 2.5, high: 3 },
+    { low: 3.5, high: 4 },
+    { low: 4.5, high: 5 }
+  ];
 
   // when the page loads, ask the user for camera permissions
   useEffect(() => {
@@ -58,14 +70,43 @@ export default function Camera() {
     
   }
 
+  function uploadPhoto(e) {
+    const file = e.target.files[0];
+    if(!file) return;
+
+    // create a url for the uploaded photo
+    const url = URL.createObjectURL(file);
+    setPhoto(url);
+  }
+
    const retakePhoto = () => {
     setPhoto(null);
+    setSelect(false);
+    setHover(0);
+    setRating(0);
   };
 
-  const confirmPhoto = () => {
-    // onCapture(photo);
-    console.log("Photo confirmed: ", photo);
-  };
+  function getClass(star) {
+    if (value >= star.high) return "active-high";
+    if (value === star.low) return "active-low";
+    return "";
+  }
+
+  function moveMouse(e, star) {
+    const {left, width} = e.currentTarget.getBoundingClientRect();
+    const percent = (e.clientX - left) / width;
+    if(percent <= 0.5) {
+        setHover(star.low)
+    }
+    else {
+        setHover(star.high)
+    }
+  }
+
+  function handleClick(val) {
+    setRating(val);
+    // onChange?.(val);
+  }
 
   if(!photo) {
     return (
@@ -74,8 +115,8 @@ export default function Camera() {
             <video className="video" ref={videoRef} autoPlay></video>
             <br/>
             <button id="start-button" onClick={() => takePicture()}>Take a photo</button>
-            <button>Upload</button>
-            <input type="file" hidden/>
+            <label className="custom-upload" htmlFor="fileUpload">Upload</label>
+            <input type="file" id="fileUpload" name="fileUpload" accept="image/*" onChange={uploadPhoto}/>
         </div>
   
         <canvas ref={canvasRef} hidden></canvas>
@@ -84,14 +125,51 @@ export default function Camera() {
     )
   }
   
-  else {
+  else if (photo && !selected){
     return (
       <div>
         <img className="video" src={photo}/>
         <br/>
         <button onClick={retakePhoto}>Retake</button>
-        <button onClick={confirmPhoto}>Use Photo</button>
+        <button onClick={() => {setSelect(true)}}>Use Photo</button>
         <canvas ref={canvasRef} hidden></canvas>
+      </div>
+    )
+  }
+  else {
+    return (
+      <div>
+        <span className="container">
+        <div>
+            <img className="video" src={photo}/>
+            <br/>
+            <button onClick={retakePhoto}>Retake</button>
+            <button disabled={true}>Use Photo</button>
+            <canvas ref={canvasRef} hidden></canvas>
+        </div>
+
+        <div>
+            <p>Your rating: <strong>{rating}</strong></p>
+            <div className="rating_stars">
+            {stars.map((star, i) => (
+                <span
+                key={i}
+                className={`s ${getClass(star)}`}
+                onMouseMove={(e) => moveMouse(e, star)}
+                onMouseLeave={() => setHover(0)}
+                onClick={() => handleClick(value)}
+                >
+                <i className="fa fa-star-o" />
+                <i className="fa fa-star-half-o" />
+                <i className="fa fa-star" />
+                </span>
+            ))}
+            </div>
+            <br/>
+           
+            <textarea placeholder="Share your thoughts..."/>
+        </div>
+        </span>
       </div>
     )
   }
