@@ -20,6 +20,8 @@ app.use(cors({
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 app.use(express.json({ limit: '50mb' }));
 
+console.log(process.env.DATABASE_URL);
+
 //middleware to authenticate a jwt token
 function auth(req, res, next) {
   const header = req.headers.authorization;
