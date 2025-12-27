@@ -10,6 +10,7 @@ export default function Camera() {
   const [selected, setSelect] = useState(false);
   const [hover, setHover] = useState(0);
   const [rating, setRating] = useState(0);
+  const [comments, setComments] = useState("");
 
   const value = hover || rating;
 
@@ -108,6 +109,30 @@ export default function Camera() {
     // onChange?.(val);
   }
 
+  async function handleSubmit() {
+    
+    const res = await fetch("http://localhost:3000/addEntry", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        photo: photo,
+        rating: rating,
+        comments: comments
+      })
+    });
+
+    if(res.ok) {
+      alert("Review submitted!");
+    }
+  }
+
+//   if(!stream) {
+//     return <div>Loading...</div>
+//   }
+
   if(!photo) {
     return (
       <div>
@@ -167,7 +192,8 @@ export default function Camera() {
             </div>
             <br/>
            
-            <textarea placeholder="Share your thoughts..."/>
+            <textarea placeholder="Share your thoughts..." onChange={(e) => {setComments(e.target.value)}}/>
+            <button onClick={handleSubmit}>✓</button>
         </div>
         </span>
       </div>

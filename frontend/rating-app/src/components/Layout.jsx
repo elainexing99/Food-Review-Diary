@@ -1,18 +1,32 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import {UserContext} from './userContext.jsx';
 import "./Layout.css";
 
 export default function Layout() {
 
+    const { loggedIn, logout } = useContext(UserContext)
+
+    //const loggedIn = localStorage.getItem("token");
+    const navigate = useNavigate();
     function getYear() {
         const year = new Date().getFullYear();
         return year;
     }
 
+    function handleLogout() {
+        logout();
+        navigate("/");
+    }
+
+
     return (
         <>
             <header>
-                <Link to="/" className="link">Overview</Link>
-                <Link to="/new-entry" className="link">New Review</Link>
+                <Link to="/" className="link">Diary</Link>
+                <Link to="/new-entry" className="link">New Entry</Link>
+                {!loggedIn && <Link to="/login" className="link" id="login">Login</Link>}
+                {loggedIn && <button id="logout" onClick={handleLogout}>Logout</button>}
             </header>
             <main>
                 <Outlet/>

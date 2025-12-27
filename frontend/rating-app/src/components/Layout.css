@@ -23,6 +23,21 @@ header .link:hover {
     color: #241571;
 }
 
+#logout {
+    color: white;
+    font-size: 20px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    margin-left: 1150px;
+}
+
+#login {
+    margin-left: 1180px;
+}
+
+#logout:hover {
+    color: #241571;
+}
 /* main {
     max-width: 1280px;
     min-width: 320px;
