@@ -142,6 +142,7 @@ app.post('/auth/google', async (req, res) => {
         });
     }
     catch(err) {
+        console.log("error in /auth/google:", err);
         res.status(500).json({ success: false, message: err.message });
     }
 })
