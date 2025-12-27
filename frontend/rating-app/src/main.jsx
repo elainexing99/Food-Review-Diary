@@ -5,10 +5,12 @@ import { UserProvider } from './components/userContext.jsx';
 
 import App from './App.jsx'
 
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <UserProvider>
-      <GoogleOAuthProvider clientId="161556439720-4on12j7bcmkfi6euges80mohvhtavvjf.apps.googleusercontent.com">
+      <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
         <App />
       </GoogleOAuthProvider>
     </UserProvider>
