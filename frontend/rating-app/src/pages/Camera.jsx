@@ -173,7 +173,7 @@ export default function Camera() {
             <canvas ref={canvasRef} hidden></canvas>
         </div>
 
-        <div>
+        <div className="ratingContainer">
             <p>Your rating: <strong>{rating}</strong></p>
             <div className="rating_stars">
             {stars.map((star, i) => (
@@ -193,7 +193,7 @@ export default function Camera() {
             <br/>
            
             <textarea placeholder="Share your thoughts..." onChange={(e) => {setComments(e.target.value)}}/>
-            <button onClick={handleSubmit}>✓</button>
+            <button id="checkmark" onClick={handleSubmit}>✓</button>
         </div>
         </span>
       </div>

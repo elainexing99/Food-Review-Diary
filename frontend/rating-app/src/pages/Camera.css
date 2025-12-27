@@ -6,6 +6,11 @@
     margin-top: 60px;
 }
 
+#checkmark {
+    margin-left: 150px;
+    padding: 5px 10px;
+}
+
 button, .custom-upload {
     image-rendering: pixelated;
     background-color: #63c5da;
@@ -35,10 +40,18 @@ button:disabled:hover {
 .container {
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
-    gap: 30px;
+    gap: 20px;
 }
+
+.ratingContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 input[type="file"] {
     display: none;
 }
@@ -68,7 +81,7 @@ p {
 }
 
 .rating_stars {
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
     display: inline-block;
     font-size: 20px;
     font-weight: 200;
