@@ -111,7 +111,7 @@ export default function Camera() {
 
   async function handleSubmit() {
     
-    const res = await fetch("http://localhost:3000/addEntry", {
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/addEntry`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${localStorage.getItem("token")}`,

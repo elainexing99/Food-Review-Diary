@@ -5,7 +5,7 @@ export default function Home() {
     const [user, setUser] = useState(null);
 
     async function getReviews() {
-        const res = await fetch("http://localhost:3000/reviews", {
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/reviews`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("token")}`
@@ -34,7 +34,7 @@ export default function Home() {
         getReviews();
 
         async function fetchUserData() {
-            const res = await fetch("http://localhost:3000/user/me", {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/user/me`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem("token")}`
