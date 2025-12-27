@@ -31,9 +31,20 @@ model Review {
   opinion String? 
   userId Int
   user User @relation(fields: [userId], references: [id])
+  folder Folder[] @relation("ReviewFolders")
+
   date DateTime @default(now())
 
   @@map("Review")
+}
+
+model Folder {
+  id     Int      @id @default(autoincrement())
+  name   String @unique
+  userId Int
+  posts  Review[] @relation("ReviewFolders")
+
+   @@map("Folder")
 }
 
 

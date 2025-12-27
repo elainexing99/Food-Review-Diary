@@ -6,6 +6,7 @@ html, body {
   box-sizing: border-box;
   overflow-x: hidden;
   background-color: #CAEEFF;
+  scrollbar-color: #63c5da aliceblue;
 }
 
 
@@ -34,10 +35,147 @@ h2 {
     color: #45505e;
     text-align: center;
     font-family: monospace;
+    margin-bottom: 20px;
+}
+
+#title {
+  text-decoration: underline wavy;
+  text-underline-offset: 10px; 
 }
 
 .reviewContainer {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-    
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+#postContainer{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.postContainer hr {
+  border: none;
+  border-top: 1px dotted black;
+  margin: 0;
+  width: 100%;
+  height: 0;
+  flex-shrink: 0;
+}
+
+#text {
+  position: absolute;
+  cursor: pointer;
+  top: 0px;
+  left: 20px;
+  color: black;
+  z-index: 10;
+  background-color: white;
+}
+
+.folderContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  
+}
+
+.modal {
+  background: aliceblue;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+}
+
+#comments {
+  width: 180px;
+  height: 80px;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  background-color: aliceblue;
+  text-align: left;
+  padding: 10px;
+}
+
+#date {
+  font-size: smaller;
+}
+
+img {
+  border-radius: 10px;
+  border: 3px solid aliceblue;
+}
+
+select {
+  padding: 18px;
+  border-radius: 5px;
+  font-family: monospace;
+  border: none;
+  color:#63c5da;
+  font-weight: bold;
+}
+
+
+select:focus {
+  outline-color: #63c5da;
+  outline-offset: 0.5ch;
+}
+
+.input {
+  border-radius: 5px;
+  padding: 10px;
+  font-family: monospace;
+  font-size: 15px;
+  border: none;
+  width: 200px;
+  margin-top: 10px;
+}
+
+.input:focus {
+    outline-color: #63c5da;
+    outline-offset: 0.5ch;
+}
+
+#plusSymbol {
+  font-size: 20px;
+  color:#63c5da;
+  background-color: aliceblue;
+  padding: 0px 8px 4px 8px;
+  border-radius: 15px;
+}
+
+#plusSymbol:hover {
+  color: #241571;
+}
+
+#newFolderLabel {
+  font-family: monospace;
+  font-size: 17px;
+  margin-right: 50px;
+  color: #45505e;
+  padding: 0;
+}
+label {
+  font-family: monospace;
+  font-size: 17px;
+  margin-left: -50px;
+  color: #45505e;
 }

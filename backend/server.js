@@ -12,7 +12,7 @@ const cors = require("cors");
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 app.use(cors({
   origin: FRONTEND_URL,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
@@ -73,6 +73,7 @@ app.post("/addEntry", auth, async (req, res) => {
                     date: new Date()
                 }
             })
+
             //console.log(review);
             return res.status(201).json({message: "New entry added"});
         }
@@ -151,18 +152,159 @@ app.post('/auth/google', async (req, res) => {
 
 app.get('/reviews', auth, async (req, res) => {
     try {
-        if(req.user) {
-            const user = await prisma.user.findUnique({
-                where: {id: req.user.userId},
-                include: {review: { orderBy: { id: 'desc' } } }
+        const {folderId} = req.query;
+        console.log("id: " + folderId);
+        if(folderId) {
+            console.log("problem");
+            const found = await prisma.folder.findUnique({
+                where: {id: parseInt(folderId)},
+                include: {posts: { orderBy: { id: 'desc' } }}
+
             })
-            if(user) {
-                return res.status(200).json(user.review);
-            }
-            else {
-                return res.status(404).json({error: "User not found"});
+            console.log("problem here");
+            console.log(found);
+            if(found) {
+                console.log("a folder has been found");
+                console.log(found.posts);
+                return res.status(200).json(found.posts);
             }
         }
+
+        else {
+            if(req.user) {
+                const user = await prisma.user.findUnique({
+                    where: {id: req.user.userId},
+                    include: {review: { orderBy: { id: 'desc' } } }
+                })
+                if(user) {
+                    return res.status(200).json(user.review);
+                }
+                else {
+                    return res.status(404).json({error: "User not found"});
+                }
+            }
+        }
+    }
+    catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
+
+app.patch('/reviews/:id', async (req, res) => {
+    try{
+        const {id} = req.params;
+        const {rating, comments} = req.body;
+        console.log(req.body);
+
+        const review = await prisma.review.findUnique({
+            where: {id: parseInt(id)}
+        })
+        console.log("review found");
+        console.log(review);
+        if(review) {
+            console.log("im here");
+            const updated = await prisma.review.update({
+                where: {id: parseInt(id)},
+                data: {
+                    rating,
+                    opinion: comments || null
+                }
+            })
+            console.log(updated);
+            return res.status(200).json(updated);
+        }
+    }
+    catch (err) {
+        return res. status(500).json({error: err.message});
+    }
+})
+
+app.post('/moveEntry/:name', auth, async (req, res) => {
+    try {
+        const {name} = req.params;
+        const {reviewId} = req.body;
+
+        console.log(name, reviewId);
+
+        const folder = await prisma.folder.findUnique({
+            where: {name: name},
+            include: {posts: true}
+        })
+
+        console.log(folder);
+
+        const review = await prisma.review.findUnique({
+            where: {id: reviewId}
+        })
+        console.log(review);
+        if(folder) {
+            if(review) {
+                //check if this review is already in this folder
+                const exists = folder.posts.some((r) => r.id === review.id);
+                if(!exists) {
+                    const updatedReview = await prisma.review.update({
+                        where: {id: reviewId},
+                        data: {
+                            folder: {
+                                connect: {id: folder.id}
+                            }
+                        }
+                    })
+
+                    const updatedFolder = await prisma.folder.update({
+                        where: {id: folder.id},
+                        data: {
+                            posts: {
+                                connect: {id: review.id}
+                            }
+                        }
+                    })
+                    return res.status(200).json({message: "Review moved to folder"});
+                }
+                return res.status(400).json({error: "Review already in this folder"});
+            }
+        }
+        else {
+            return res.status(404).json({error: "Folder not found"});
+        }
+    }
+    catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
+
+app.post('/createFolder', auth, async (req, res) => {
+    try {
+        if(req.user) {
+            const user = await prisma.user.findUnique({
+                where: {id: req.user.userId}
+            })
+            console.log("found user");
+
+            if(user) {
+                console.log("user is authenticated")
+                console.log(req.body);
+                const {name} = req.body;
+
+                console.log(req.body);
+                const folder = await prisma.folder.create({
+                    data: {name: name, userId: user.id}
+                })
+                return res.status(201).json({message: "Folder created", folderId: folder.name});
+            }
+            return res.status(404).json({error: "User not found"});
+        }
+    }
+    catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
+
+app.get('/folders', async (req, res) => {
+    try {
+        const folders = await prisma.folder.findMany();
+        console.log(folders);
+        return res.status(200).json(folders);
     }
     catch (err) {
         res.status(500).json({ error: err.message });
