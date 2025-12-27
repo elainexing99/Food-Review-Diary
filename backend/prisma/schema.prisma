@@ -20,6 +20,8 @@ model User {
   lastName String
   email String @unique
   review Review[]
+
+  @@map("User")
 }
 
 model Review {
@@ -30,6 +32,8 @@ model Review {
   userId Int
   user User @relation(fields: [userId], references: [id])
   date DateTime @default(now())
+
+  @@map("Review")
 }
 
 
